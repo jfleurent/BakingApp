@@ -10,25 +10,35 @@ public class Step implements Parcelable {
     private int id;
     private String description;
     private String videoURL;
-    private String thumbnialURL;
+    private String thumbnailURL;
+    private String shortDescription;
 
     public Step(){
 
     }
 
-    public Step(int id,String description, String videoURL, String thumbnialURL) {
+    public Step(int id,String shortDescription, String description, String videoURL, String thumbnailURL) {
         this.id = id;
         this.description = description;
         this.videoURL = videoURL;
-        this.thumbnialURL = thumbnialURL;
+        this.thumbnailURL = thumbnailURL;
+        this.shortDescription = shortDescription;
+    }
+
+    public String getShortDescription() {
+        return shortDescription;
+    }
+
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
     }
 
     public String getThumbnialURL() {
-        return thumbnialURL;
+        return thumbnailURL;
     }
 
     public void setThumbnialURL(String thumbnialURL) {
-        this.thumbnialURL = thumbnialURL;
+        this.thumbnailURL = thumbnialURL;
     }
 
     public String getVideoURL() {
@@ -68,17 +78,19 @@ public class Step implements Parcelable {
         dest.writeInt(this.id);
         dest.writeString(this.description);
         dest.writeString(this.videoURL);
-        dest.writeString(this.thumbnialURL);
+        dest.writeString(this.thumbnailURL);
+        dest.writeString(this.shortDescription);
     }
 
     protected Step(Parcel in) {
         this.id = in.readInt();
         this.description = in.readString();
         this.videoURL = in.readString();
-        this.thumbnialURL = in.readString();
+        this.thumbnailURL = in.readString();
+        this.shortDescription = in.readString();
     }
 
-    public static final Parcelable.Creator<Step> CREATOR = new Parcelable.Creator<Step>() {
+    public static final Creator<Step> CREATOR = new Creator<Step>() {
         @Override
         public Step createFromParcel(Parcel source) {
             return new Step(source);

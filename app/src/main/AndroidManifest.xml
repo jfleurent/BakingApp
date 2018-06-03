@@ -12,6 +12,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".BakingApplication">
+
+        <!-- For Recipe Widgets-->
+        <receiver android:name=".RecipeWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/recipe_widget_info" />
+        </receiver>
+
+        <service android:name="StackWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            android:exported="false" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,6 +37,7 @@
         </activity>
         <activity android:name=".StepActiviity"
             android:parentActivityName=".StepListActivity"/>
+
         <activity android:name=".StepListActivity"
             android:parentActivityName=".MainActivity"></activity>
     </application>

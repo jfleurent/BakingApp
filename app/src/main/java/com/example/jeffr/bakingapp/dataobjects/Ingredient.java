@@ -7,14 +7,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class Ingredient implements Parcelable {
-    private int quantity;
+    private float quantity;
     private String measure;
     private String ingredient;
 
     public Ingredient(){
 
     }
-    public Ingredient(int quantity, String measure, String ingredient){
+    public Ingredient(float quantity, String measure, String ingredient){
         this.quantity = quantity;
         this.measure = measure;
         this.ingredient = ingredient;
@@ -37,12 +37,12 @@ public class Ingredient implements Parcelable {
         this.measure = measure;
     }
 
-    public int getQuantity() {
+    public float getQuantity() {
 
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(float quantity) {
         this.quantity = quantity;
     }
 
@@ -53,18 +53,18 @@ public class Ingredient implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.quantity);
+        dest.writeFloat(this.quantity);
         dest.writeString(this.measure);
         dest.writeString(this.ingredient);
     }
 
     protected Ingredient(Parcel in) {
-        this.quantity = in.readInt();
+        this.quantity = in.readFloat();
         this.measure = in.readString();
         this.ingredient = in.readString();
     }
 
-    public static final Parcelable.Creator<Ingredient> CREATOR = new Parcelable.Creator<Ingredient>() {
+    public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
         @Override
         public Ingredient createFromParcel(Parcel source) {
             return new Ingredient(source);

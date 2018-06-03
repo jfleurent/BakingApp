@@ -2,6 +2,9 @@ package com.example.jeffr.bakingapp;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -10,6 +13,8 @@ import android.support.v7.widget.RecyclerView;
 
 import com.example.jeffr.bakingapp.adapters.RecipeRecyclerViewAdapter;
 import com.example.jeffr.bakingapp.adapters.RecyclerViewOnClick;
+import com.example.jeffr.bakingapp.data.RecipeDBContract;
+import com.example.jeffr.bakingapp.data.RecipeDBHelper;
 import com.example.jeffr.bakingapp.dataobjects.Recipe;
 
 import java.util.List;
@@ -21,6 +26,7 @@ import timber.log.Timber;
 public class MainActivity extends AppCompatActivity implements RecyclerViewOnClick {
     static RecyclerView recyclerView;
     static RecipeRecyclerViewAdapter adapter;
+    static SQLiteOpenHelper recipeDb;
    static List<Recipe> recipeList;
 
     @Override
@@ -29,6 +35,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewOnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        //TODO Change for content provider
+        recipeDb = new RecipeDBHelper(this);
+
         recyclerView = findViewById(R.id.recipe_list_recyclerview);
         adapter = new RecipeRecyclerViewAdapter();
         adapter.setRecyclerViewOnClick(this);
@@ -45,11 +55,22 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewOnCli
         Timber.d("End onCreate");
     }
 
-    public static void setAdapterList(List<Recipe> recipes){
+    public static void setAdapterList(){
         Timber.d("Start setAdapterList");
-        adapter.setRecipes(recipes);
+        adapter.setRecipes(getCurosr());
         recyclerView.setAdapter(adapter);
         Timber.d("End setAdapterList");
+    }
+
+    public static Cursor getCurosr(){
+        return recipeDb.getReadableDatabase().query(
+                RecipeDBContract.RecipeEntry.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
     }
 
     @Override

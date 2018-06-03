@@ -1,6 +1,7 @@
 package com.example.jeffr.bakingapp.adapters;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.jeffr.bakingapp.R;
+import com.example.jeffr.bakingapp.data.RecipeDBContract;
 import com.example.jeffr.bakingapp.dataobjects.Recipe;
 
 import java.util.List;
@@ -19,7 +21,7 @@ import timber.log.Timber;
 
 public class RecipeRecyclerViewAdapter extends RecyclerView.Adapter<RecipeRecyclerViewAdapter.RecyclerViewHolder> {
     RecyclerViewOnClick recyclerViewOnClick;
-    List<Recipe> recipes;
+    Cursor recipes;
 
     public void setRecyclerViewOnClick(RecyclerViewOnClick recyclerViewOnClick){
         Timber.d("Start setRecyclerViewOnClick");
@@ -27,7 +29,7 @@ public class RecipeRecyclerViewAdapter extends RecyclerView.Adapter<RecipeRecycl
         Timber.d("End setRecyclerViewOnClick");
     }
 
-    public void setRecipes(List<Recipe> recipes){
+    public void setRecipes(Cursor recipes){
         Timber.d("Start setRecipes");
         this.recipes = recipes;
         Timber.d("End setRecipes");
@@ -49,7 +51,8 @@ public class RecipeRecyclerViewAdapter extends RecyclerView.Adapter<RecipeRecycl
     @Override
     public void onBindViewHolder(@NonNull RecipeRecyclerViewAdapter.RecyclerViewHolder holder,final int position) {
         Timber.d("Start onBindViewHolder");
-        holder.recipeTitle.setText(recipes.get(position).getName());
+        recipes.moveToPosition(position);
+        holder.recipeTitle.setText(recipes.getString(recipes.getColumnIndex(RecipeDBContract.RecipeEntry.COLUMN_NAME)));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
                                                @Override
                                                public void onClick(View view) {
@@ -62,7 +65,7 @@ public class RecipeRecyclerViewAdapter extends RecyclerView.Adapter<RecipeRecycl
     @Override
     public int getItemCount() {
         int size;
-        return size = recipes == null ? 0 : recipes.size();
+        return size = recipes == null ? 0 : recipes.getCount();
     }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder{
