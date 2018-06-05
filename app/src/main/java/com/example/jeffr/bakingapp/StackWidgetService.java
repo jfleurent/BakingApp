@@ -41,7 +41,7 @@ public class StackWidgetService extends RemoteViewsService {
         @Override
         public RemoteViews getViewAt(int i) {
             RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(),R.layout.recipe_widget);
-            remoteViews.setTextViewText(R.id.recipe_widget_textview,MainActivity.recipeList.get(i).getName());
+
 
             Intent intent = new Intent();
 

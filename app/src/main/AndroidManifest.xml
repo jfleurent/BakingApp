@@ -40,6 +40,12 @@
 
         <activity android:name=".StepListActivity"
             android:parentActivityName=".MainActivity"></activity>
+
+        <provider
+            android:name=".data.RecipeContentProvider"
+            android:authorities="com.example.jeffr.bakingapp"
+            android:exported="false"/>
+
     </application>
 
 </manifest>
