@@ -18,6 +18,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.ThemedSpinnerAdapter;
 
 import com.example.jeffr.bakingapp.adapters.RecipeRecyclerViewAdapter;
 import com.example.jeffr.bakingapp.adapters.RecyclerViewOnClick;
@@ -34,13 +37,15 @@ import timber.log.Timber;
 import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewOnClick, LoaderManager.LoaderCallbacks<Cursor> {
-    RecyclerView recyclerView;
+        RecyclerView recyclerView;
     RecipeRecyclerViewAdapter adapter;
 
    static LoaderManager loaderManager;
    static LoaderManager.LoaderCallbacks<Cursor> loaderCallbacks;
    static Context context;
+   static ProgressBar progressBar;
 
+   private Cursor cursor;
     public static final int RECIPE_LOADER = 505;
 
     @Override
@@ -49,12 +54,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewOnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        progressBar = findViewById(R.id.progressbar);
         recyclerView = findViewById(R.id.recipe_list_recyclerview);
         adapter = new RecipeRecyclerViewAdapter();
         adapter.setRecyclerViewOnClick(this);
         loaderManager = getSupportLoaderManager();
         loaderCallbacks = this;
         context = this;
+        setProgressbarVisible();
         new FetchRecipes().execute();
         if((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
                 == Configuration.SCREENLAYOUT_SIZE_LARGE){
@@ -69,18 +76,26 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewOnCli
         Timber.d("End onCreate");
     }
 
-//    public static void setAdapterList(){
-//        Timber.d("Start setAdapterList");
-//        adapter.setRecipes(getCurosr());
-//        recyclerView.setAdapter(adapter);
-//        Timber.d("End setAdapterList");
-//    }
+    private void setProgressbarVisible(){
+        Timber.d("Start setProgressbarVisible");
+        progressBar.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.INVISIBLE);
+        Timber.d("End setProgressbarVisible");
+    }
 
+    private void setProgressbarInvisible(){
+        Timber.d("Start setProgressbarInvisible");
+        progressBar.setVisibility(View.INVISIBLE);
+        recyclerView.setVisibility(View.VISIBLE);
+        Timber.d("End setProgressbarInvisible");
+    }
 
     @Override
     public void rowSelected(int row) {
         Timber.d("Start rowSelected");
         Intent intent = new Intent(this,StepListActivity.class);
+        cursor.moveToPosition(row);
+        intent.putExtra("Recipe",cursor.getString(cursor.getColumnIndex(RecipeDBContract.RecipeEntry.COLUMN_NAME)));
         startActivity(intent);
         Timber.d("End rowSelected");
     }
@@ -109,8 +124,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewOnCli
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         Timber.d("Start onLoadFinished");
+        cursor = data;
         adapter.setRecipes(data);
         recyclerView.setAdapter(adapter);
+        setProgressbarInvisible();
         Timber.d("End onLoadFinished");
     }
 

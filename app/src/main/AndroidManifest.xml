@@ -24,7 +24,7 @@
                 android:resource="@xml/recipe_widget_info" />
         </receiver>
 
-        <service android:name="StackWidgetService"
+        <service android:name=".ListViewWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"
             android:exported="false" />
 
@@ -35,16 +35,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".StepActiviity"
+        <activity android:name=".StepActivity"
             android:parentActivityName=".StepListActivity"/>
 
         <activity android:name=".StepListActivity"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity"/>
 
         <provider
             android:name=".data.RecipeContentProvider"
             android:authorities="com.example.jeffr.bakingapp"
-            android:exported="false"/>
+            android:exported="true"/>
 
     </application>
 

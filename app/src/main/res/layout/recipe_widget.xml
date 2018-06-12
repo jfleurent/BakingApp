@@ -1,18 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#ffffffff">
 
-    <ImageView
+    <LinearLayout
+        android:id="@+id/widget_current_recipe_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/brownies" />
+        android:orientation="vertical"
+        >
+        <ImageView
+            android:id="@+id/widget_recipe_imageview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/widget_previous_button"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_previoud_recipe" />
+            <TextView
+                android:id="@+id/widget_recipe_name_textview"
+                android:layout_weight="2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"/>
+            <Button
+                android:id="@+id/widget_next_button"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_next_recipe"
+                android:textAlignment="center"/>
+        </LinearLayout>
+    </LinearLayout>
 
+    <ListView
+        android:id="@+id/ingredient_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </ListView>
     <TextView
-        android:id="@+id/recipe_widget_textview"
+        android:id="@+id/empty_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_height="wrap_content"/>
 
-</RelativeLayout>
+</LinearLayout>

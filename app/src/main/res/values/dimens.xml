@@ -7,4 +7,18 @@
     <!--Widget-->
     <dimen name="widget_max_height">200dp</dimen>
     <dimen name="widget_max_width">200dp</dimen>
+
+    <!--Step Item CardView-->
+    <dimen name="step_name_text_size">20sp</dimen>
+    <dimen name="step_description_text_size">20sp</dimen>
+    <dimen name="step_list_cardview_hieght">60dp</dimen>
+
+    <!--Step Item Layout-->
+    <dimen name="step_list_recipe_text_size">30dp</dimen>
+
+    <!--Step Layout-->
+    <dimen name="step_instruction_video_height">300dp</dimen>
+    <dimen name="step_text_size">20sp</dimen>
+
+
 </resources>

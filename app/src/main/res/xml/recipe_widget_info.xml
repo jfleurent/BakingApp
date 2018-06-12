@@ -3,7 +3,6 @@
     android:initialLayout="@layout/recipe_widget"
     android:minHeight="@dimen/widget_max_height"
     android:minWidth="@dimen/widget_max_width"
-    android:previewImage="@drawable/brownies"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="1800000"
     android:widgetCategory="home_screen" />

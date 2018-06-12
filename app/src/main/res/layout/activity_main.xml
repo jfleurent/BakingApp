@@ -5,10 +5,17 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-   <android.support.v7.widget.RecyclerView
-       android:id="@+id/recipe_list_recyclerview"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content">
-   </android.support.v7.widget.RecyclerView>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recipe_list_recyclerview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.RecyclerView>
+
+    <ProgressBar
+        android:id="@+id/progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
 
 </RelativeLayout>

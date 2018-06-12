@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.jeffr.bakingapp.R;
@@ -53,6 +54,7 @@ public class RecipeRecyclerViewAdapter extends RecyclerView.Adapter<RecipeRecycl
         Timber.d("Start onBindViewHolder");
         recipes.moveToPosition(position);
         holder.recipeTitle.setText(recipes.getString(recipes.getColumnIndex(RecipeDBContract.RecipeEntry.COLUMN_NAME)));
+        holder.recipeImage.setImageResource(getDrawableResource(position));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
                                                @Override
                                                public void onClick(View view) {
@@ -68,9 +70,34 @@ public class RecipeRecyclerViewAdapter extends RecyclerView.Adapter<RecipeRecycl
         return size = recipes == null ? 0 : recipes.getCount();
     }
 
+    private int getDrawableResource(int recipeIndex) {
+        Timber.d("Start getDrawableResource");
+        switch (recipeIndex) {
+            case 0:
+                Timber.d("End getDrawableResource");
+                return R.drawable.nutella_pie;
+            case 1:
+                Timber.d("End getDrawableResource");
+                return R.drawable.brownies;
+            case 2:
+                Timber.d("End getDrawableResource");
+                return R.drawable.yellow_cake;
+            case 3:
+                Timber.d("End getDrawableResource");
+                return R.drawable.cheese_cake;
+            default:
+                Timber.d("End getDrawableResource");
+                return 0;
+        }
+
+    }
+
     public class RecyclerViewHolder extends RecyclerView.ViewHolder{
         @BindView(R.id.recipe_title_textview)
         TextView recipeTitle;
+
+        @BindView(R.id.recipe_item_imageview)
+        ImageView recipeImage;
 
         public RecyclerViewHolder(View itemView) {
             super(itemView);

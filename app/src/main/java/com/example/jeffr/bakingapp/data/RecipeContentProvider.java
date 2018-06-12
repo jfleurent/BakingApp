@@ -9,6 +9,9 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.android.exoplayer2.util.Util;
+
+import butterknife.internal.Utils;
 import timber.log.Timber;
 
 public class RecipeContentProvider extends ContentProvider {
@@ -68,27 +71,59 @@ public class RecipeContentProvider extends ContentProvider {
             }
             case CODE_INGREDIENT: {
                 Timber.d("Went to table: " +RecipeDBContract.IngredientEntry.TABLE_NAME);
-                cursor = mOpenHelper1.getReadableDatabase().query(
-                        RecipeDBContract.IngredientEntry.TABLE_NAME,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        sortOrder);
+                if(projection == null){
+                    cursor = mOpenHelper1.getReadableDatabase().query(
+                            RecipeDBContract.IngredientEntry.TABLE_NAME,
+                            projection,
+                            selection,
+                            selectionArgs,
+                            null,
+                            null,
+                            sortOrder);
+                }
+                else{
+                    cursor = mOpenHelper1.getReadableDatabase().query(
+                            RecipeDBContract.IngredientEntry.TABLE_NAME+
+                                    " , "+ RecipeDBContract.RecipeEntry.TABLE_NAME,
+                            projection,
+                            selection,
+                            selectionArgs,
+                            null,
+                            null,
+                            sortOrder);
+                }
+
                 break;
             }
             case CODE_STEPS: {
                 Timber.d("Went to table: " +RecipeDBContract.StepEntry.TABLE_NAME);
-                cursor = mOpenHelper1.getReadableDatabase().query(
-                        RecipeDBContract.IngredientEntry.TABLE_NAME,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        sortOrder);
-                break;
+                if (projection == null){
+                    cursor = mOpenHelper1.getReadableDatabase().query(
+                            RecipeDBContract.StepEntry.TABLE_NAME,
+                            projection,
+                            selection,
+                            selectionArgs,
+                            null,
+                            null,
+                            sortOrder);
+                    break;
+                }
+                else{
+                    cursor = mOpenHelper1.getReadableDatabase().query(true,
+                            RecipeDBContract.StepEntry.TABLE_NAME+
+                                    " , "+RecipeDBContract.IngredientEntry.TABLE_NAME+" , "
+                                    + RecipeDBContract.RecipeEntry.TABLE_NAME,
+                            projection,
+                            selection,
+                            selectionArgs,
+                            null,
+                            null,
+                            sortOrder,
+                            null);
+                    break;
+
+                }
+
             }
             default:
                 Timber.d("Unknown Uri");
@@ -114,7 +149,8 @@ public class RecipeContentProvider extends ContentProvider {
                 recipeDB.beginTransaction();
                 try {
                     Timber.d("Insert into table: "+ RecipeDBContract.RecipeEntry.TABLE_NAME);
-                    recipeDB.insert(RecipeDBContract.RecipeEntry.TABLE_NAME, null, contentValues);
+                    recipeDB.insertWithOnConflict(RecipeDBContract.RecipeEntry.TABLE_NAME,
+                            null, contentValues,SQLiteDatabase.CONFLICT_IGNORE);
                     recipeDB.setTransactionSuccessful();
                 } catch (Exception e) {
 
@@ -126,7 +162,8 @@ public class RecipeContentProvider extends ContentProvider {
                 recipeDB.beginTransaction();
                 try {
                     Timber.d("Insert into table: "+ RecipeDBContract.IngredientEntry.TABLE_NAME);
-                    recipeDB.insert(RecipeDBContract.IngredientEntry.TABLE_NAME, null, contentValues);
+                    recipeDB.insertWithOnConflict(RecipeDBContract.IngredientEntry.TABLE_NAME,
+                            null, contentValues,SQLiteDatabase.CONFLICT_IGNORE);
                     recipeDB.setTransactionSuccessful();
                 } catch (Exception e) {
 
@@ -138,7 +175,8 @@ public class RecipeContentProvider extends ContentProvider {
                 recipeDB.beginTransaction();
                 try {
                     Timber.d("Insert into table: "+ RecipeDBContract.StepEntry.TABLE_NAME);
-                    recipeDB.insert(RecipeDBContract.StepEntry.TABLE_NAME, null, contentValues);
+                    recipeDB.insertWithOnConflict(RecipeDBContract.StepEntry.TABLE_NAME,
+                            null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
                     recipeDB.setTransactionSuccessful();
                 } catch (Exception e) {
 
