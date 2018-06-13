@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewOnCli
         adapter.setRecipes(data);
         recyclerView.setAdapter(adapter);
         setProgressbarInvisible();
+        Timber.d("Cursor = " + cursor);
         Timber.d("End onLoadFinished");
     }
 

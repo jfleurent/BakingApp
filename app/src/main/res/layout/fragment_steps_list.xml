@@ -15,13 +15,13 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/step_list_recipe_text_size"/>
 
-    <android.support.v7.widget.AppCompatSpinner
-        android:id="@+id/indgredeint_list_spinner"
+    <ExpandableListView
+        android:id="@+id/ingredients_expandable_listview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:drawable/btn_dropdown"
-        android:spinnerMode="dropdown">
-    </android.support.v7.widget.AppCompatSpinner>
+        android:groupIndicator="@drawable/ic_show_group"
+        >
+    </ExpandableListView>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/step_list_recyclerview"

@@ -2,8 +2,10 @@ package com.example.jeffr.bakingapp.fragments;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,18 +17,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.jeffr.bakingapp.R;
 import com.example.jeffr.bakingapp.StepActivity;
+import com.example.jeffr.bakingapp.adapters.ExpandableListAdapter;
 import com.example.jeffr.bakingapp.adapters.RecipeStepRecyclerViewAdapter;
 import com.example.jeffr.bakingapp.adapters.RecyclerViewOnClick;
 import com.example.jeffr.bakingapp.data.RecipeDBContract;
 import com.example.jeffr.bakingapp.data.RecipeDBHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -35,8 +40,11 @@ import timber.log.Timber;
 
 public class StepsListFragment extends Fragment implements RecyclerViewOnClick, LoaderManager.LoaderCallbacks<Cursor>  {
     private static final int STEP_LIST_LOADER = 595;
-    @BindView(R.id.indgredeint_list_spinner)
-    Spinner ingredientList;
+    private List<String> headers;
+    private HashMap<String,List<String>> stringListHashMap;
+
+    @BindView(R.id.ingredients_expandable_listview)
+    ExpandableListView ingredientList;
 
     @BindView(R.id.step_list_imageview)
     ImageView recipeImage;
@@ -180,15 +188,23 @@ public class StepsListFragment extends Fragment implements RecyclerViewOnClick, 
         adapter.setCursor(data);
         Timber.d("Cursor size:" + cursor.getCount());
         stepListRecyclerView.setAdapter(adapter);
-        adapter2 = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item,getIngredientStrings());
-        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        ingredientList.setAdapter(adapter2);
+        initData();
+        ExpandableListAdapter expandableListAdapter = new ExpandableListAdapter(getActivity(),headers,stringListHashMap);
+        ingredientList.setAdapter(expandableListAdapter);
         Timber.d("End onLoadFinished");
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 
+    }
+
+    private void initData(){
+        Timber.d("Start initData");
+        headers = new ArrayList<>();
+        stringListHashMap = new HashMap<>();
+        headers.add("Ingredients");
+        stringListHashMap.put(headers.get(0),getIngredientStrings());
+        Timber.d("End initData");
     }
 }

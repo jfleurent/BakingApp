@@ -78,7 +78,6 @@ public class FetchRecipes extends AsyncTask<Integer, Void, List<Recipe>> {
             }
 
             MainActivity.loaderManager.initLoader(RECIPE_LOADER, null, loaderCallbacks);
-            MainActivity.loaderManager.restartLoader(RECIPE_LOADER,new Bundle(),loaderCallbacks);
 
         }
         Timber.d("End onPostExecute");
