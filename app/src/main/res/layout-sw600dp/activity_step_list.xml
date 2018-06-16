@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal">
 
     <fragment
@@ -18,13 +19,24 @@
         >
 
         <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+            android:layout_weight="3"
+            android:id="@+id/instruction_video_player"
             android:layout_width="match_parent"
-            android:layout_height="200dp">
+            android:layout_height="@dimen/step_instruction_video_height">
         </com.google.android.exoplayer2.ui.SimpleExoPlayerView>
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="200dp"
+            android:layout_weight="1"
+            app:cardUseCompatPadding="true">
+
+            <TextView
+                android:id="@+id/step_description_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textSize="20sp" />
         </android.support.v7.widget.CardView>
     </LinearLayout>
 </LinearLayout>

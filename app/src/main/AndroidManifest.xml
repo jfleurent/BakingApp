@@ -36,6 +36,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".StepActivity"
+            android:configChanges="screenSize|orientation|screenLayout|navigation"
             android:parentActivityName=".StepListActivity"/>
 
         <activity android:name=".StepListActivity"

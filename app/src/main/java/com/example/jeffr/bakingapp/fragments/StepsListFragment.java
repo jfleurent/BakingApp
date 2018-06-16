@@ -2,10 +2,8 @@ package com.example.jeffr.bakingapp.fragments;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.jeffr.bakingapp.R;
@@ -40,8 +37,11 @@ import timber.log.Timber;
 
 public class StepsListFragment extends Fragment implements RecyclerViewOnClick, LoaderManager.LoaderCallbacks<Cursor>  {
     private static final int STEP_LIST_LOADER = 595;
+    private static final int INGREDIENT_LIST_LOADER = 345;
+    public static String recipeName;
     private List<String> headers;
     private HashMap<String,List<String>> stringListHashMap;
+    Cursor stepCurosr;
 
     @BindView(R.id.ingredients_expandable_listview)
     ExpandableListView ingredientList;
@@ -57,7 +57,6 @@ public class StepsListFragment extends Fragment implements RecyclerViewOnClick, 
 
     RecipeStepRecyclerViewAdapter adapter;
     ArrayAdapter<String> adapter2;
-    Cursor cursor;
 
     public StepsListFragment(){
 
@@ -70,8 +69,9 @@ public class StepsListFragment extends Fragment implements RecyclerViewOnClick, 
         View rootView = inflater.inflate(R.layout.fragment_steps_list, container, false);
         ButterKnife.bind(this,rootView);
         getActivity().getSupportLoaderManager().initLoader(STEP_LIST_LOADER,null,this);
-        recipeTitle.setText(getActivity().getIntent().getExtras().getString("Recipe"));
-        recipeImage.setImageResource(getDrawableResource(getActivity().getIntent().getExtras().getString("Recipe")));
+        getActivity().getSupportLoaderManager().initLoader(INGREDIENT_LIST_LOADER,null,this);
+        recipeTitle.setText(recipeName);
+        recipeImage.setImageResource(getDrawableResource(recipeName));
         adapter = new RecipeStepRecyclerViewAdapter();
         adapter.setRecyclerViewOnClick(this);
         stepListRecyclerView.setAdapter(adapter);
@@ -80,14 +80,14 @@ public class StepsListFragment extends Fragment implements RecyclerViewOnClick, 
         return rootView;
     }
 
-    private List<String> getIngredientStrings(){
+    private List<String> getIngredientStrings(Cursor data){
         Timber.d("Start getIngredientStrings");
-        cursor.moveToPosition(0);
+        data.moveToPosition(0);
         List<String> ingredients = new ArrayList<>();
-        while(cursor.move(1)){
-            String name = cursor.getString(cursor.getColumnIndex(RecipeDBContract.IngredientEntry.COLUMN_NAME));
-            String quantity = cursor.getString(cursor.getColumnIndex(RecipeDBContract.IngredientEntry.COLUMN_QUANTITY));
-            String measure = cursor.getString(cursor.getColumnIndex(RecipeDBContract.IngredientEntry.COLUMN_MEASURE));
+        while(data.move(1)){
+            String name = data.getString(data.getColumnIndex(RecipeDBContract.IngredientEntry.COLUMN_NAME));
+            String quantity = data.getString(data.getColumnIndex(RecipeDBContract.IngredientEntry.COLUMN_QUANTITY));
+            String measure = data.getString(data.getColumnIndex(RecipeDBContract.IngredientEntry.COLUMN_MEASURE));
             String ingredient = null;
             if(name != null && quantity != null && measure != null){
                 ingredient = name + "\t" + quantity +" " + measure;
@@ -102,28 +102,9 @@ public class StepsListFragment extends Fragment implements RecyclerViewOnClick, 
 
     @Override
     public void rowSelected(int row) {
-        Cursor cursor = getStepsCursor();
-        cursor.moveToPosition(row);
         Intent intent = new Intent(getActivity(), StepActivity.class);
-        intent.putExtra("Step",cursor.getInt(0));
-        getActivity().getIntent().putExtra("Recipe", getActivity().getIntent().getExtras().getString("Recipe"));
+        intent.putExtra("Step Number", row);
         startActivity(intent);
-    }
-
-    private Cursor getStepsCursor(){
-        RecipeDBHelper recipeDBHelper = new RecipeDBHelper(getActivity());
-        String[] steps = {RecipeDBContract.StepEntry.TABLE_NAME+"."+RecipeDBContract.StepEntry.COLUMN_ID};
-       return recipeDBHelper.getReadableDatabase().query(
-                RecipeDBContract.StepEntry.TABLE_NAME+" , "+ RecipeDBContract.RecipeEntry.TABLE_NAME,
-                steps,
-               RecipeDBContract.RecipeEntry.TABLE_NAME+"."+ RecipeDBContract.RecipeEntry.COLUMN_NAME +" = '"
-               + getActivity().getIntent().getExtras().getString("Recipe") + "' AND "+ RecipeDBContract.RecipeEntry.TABLE_NAME
-               + "."+ RecipeDBContract.RecipeEntry.COLUMN_ID + " = " + RecipeDBContract.StepEntry.COLUMN_RECIPE_ID,
-                null,
-                null,
-                null,
-                null
-                );
     }
 
     private int getDrawableResource(String recipe) {
@@ -155,23 +136,28 @@ public class StepsListFragment extends Fragment implements RecyclerViewOnClick, 
                 Uri stepQueryUri = RecipeDBContract.StepEntry.STEP_CONTENT_URI;
                 Timber.d("Queried: "+stepQueryUri.toString());
 
-                String[] projection = {RecipeDBContract.StepEntry.COLUMN_DESCRIPTION,
-                        RecipeDBContract.StepEntry.COLUMN_SHORT_DESCRIPTION,
-                        RecipeDBContract.IngredientEntry.COLUMN_NAME,
-                        RecipeDBContract.IngredientEntry.COLUMN_QUANTITY,
-                        RecipeDBContract.IngredientEntry.COLUMN_MEASURE};
-
-                String selection = RecipeDBContract.RecipeEntry.TABLE_NAME+"."+RecipeDBContract.RecipeEntry.COLUMN_ID +
-                        " = " +RecipeDBContract.IngredientEntry.TABLE_NAME+ "."+RecipeDBContract.IngredientEntry.COLUMN_RECIPE_ID
-                        + " AND " + RecipeDBContract.RecipeEntry.TABLE_NAME+"."+RecipeDBContract.RecipeEntry.COLUMN_ID +
-                        " = " +RecipeDBContract.StepEntry.TABLE_NAME+ "."+ RecipeDBContract.StepEntry.COLUMN_RECIPE_ID +
-                        " AND "+ RecipeDBContract.RecipeEntry.TABLE_NAME+"."+RecipeDBContract.RecipeEntry.COLUMN_NAME +
-                        " = '" + getActivity().getIntent().getExtras().getString("Recipe")+"'";
+                String selection = RecipeDBContract.RecipeEntry.TABLE_NAME+"."+ RecipeDBContract.RecipeEntry.COLUMN_ID
+                        + " = " + RecipeDBContract.StepEntry.COLUMN_RECIPE_ID + " AND " + RecipeDBContract.RecipeEntry.TABLE_NAME
+                        + "."+RecipeDBContract.RecipeEntry.COLUMN_NAME + " = '" + recipeName+"'";
 
                 return new android.support.v4.content.CursorLoader(getActivity(),
                         stepQueryUri,
-                        projection,
+                        null,
                         selection,
+                        null,
+                        null);
+            case INGREDIENT_LIST_LOADER:
+                Uri ingredientQueryUri = RecipeDBContract.IngredientEntry.INGREDIENT_CONTENT_URI;
+                Timber.d("Queried: "+ingredientQueryUri.toString());
+
+                String selection2 = RecipeDBContract.RecipeEntry.TABLE_NAME+"."+ RecipeDBContract.RecipeEntry.COLUMN_ID
+                        + " = " + RecipeDBContract.IngredientEntry.COLUMN_RECIPE_ID + " AND " + RecipeDBContract.RecipeEntry.TABLE_NAME
+                        + "."+RecipeDBContract.RecipeEntry.COLUMN_NAME + " = '" + recipeName+"'";
+
+                return new android.support.v4.content.CursorLoader(getActivity(),
+                        ingredientQueryUri,
+                        null,
+                        selection2,
                         null,
                         null);
             default:
@@ -184,13 +170,20 @@ public class StepsListFragment extends Fragment implements RecyclerViewOnClick, 
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         Timber.d("Start onLoadFinished");
-        cursor = data;
-        adapter.setCursor(data);
-        Timber.d("Cursor size:" + cursor.getCount());
-        stepListRecyclerView.setAdapter(adapter);
-        initData();
-        ExpandableListAdapter expandableListAdapter = new ExpandableListAdapter(getActivity(),headers,stringListHashMap);
-        ingredientList.setAdapter(expandableListAdapter);
+        switch (loader.getId()){
+            case STEP_LIST_LOADER:
+                stepCurosr = data;
+                adapter.setSteps(data);
+                stepListRecyclerView.setAdapter(adapter);
+                break;
+            case INGREDIENT_LIST_LOADER:
+                initData(data);
+                ExpandableListAdapter expandableListAdapter = new ExpandableListAdapter(getActivity(),headers,stringListHashMap);
+                ingredientList.setAdapter(expandableListAdapter);
+                break;
+            default:
+                Timber.d("Loader Not Implemented: " + loader.getId());
+        }
         Timber.d("End onLoadFinished");
     }
 
@@ -199,12 +192,12 @@ public class StepsListFragment extends Fragment implements RecyclerViewOnClick, 
 
     }
 
-    private void initData(){
+    private void initData(Cursor data){
         Timber.d("Start initData");
         headers = new ArrayList<>();
         stringListHashMap = new HashMap<>();
         headers.add("Ingredients");
-        stringListHashMap.put(headers.get(0),getIngredientStrings());
+        stringListHashMap.put(headers.get(0),getIngredientStrings(data));
         Timber.d("End initData");
     }
 }

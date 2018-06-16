@@ -21,8 +21,7 @@ import timber.log.Timber;
 
 public class RecipeStepRecyclerViewAdapter extends RecyclerView.Adapter<RecipeStepRecyclerViewAdapter.RecyclerViewHolder> {
     RecyclerViewOnClick recyclerViewOnClick;
-    Cursor cursor;
-    List<String> shortDescriptions = new ArrayList<>();
+    Cursor steps;
 
     public void setRecyclerViewOnClick(RecyclerViewOnClick recyclerViewOnClick) {
         Timber.d("Start setRecyclerViewOnClick");
@@ -30,9 +29,9 @@ public class RecipeStepRecyclerViewAdapter extends RecyclerView.Adapter<RecipeSt
         Timber.d("End setRecyclerViewOnClick");
     }
 
-    public void setCursor(Cursor cursor) {
+    public void setSteps(Cursor steps) {
         Timber.d("Start setRecipes");
-        this.cursor = cursor;
+        this.steps = steps;
         Timber.d("End setRecipes");
     }
 
@@ -51,7 +50,8 @@ public class RecipeStepRecyclerViewAdapter extends RecyclerView.Adapter<RecipeSt
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, final int position) {
         Timber.d("Start onBindViewHolder");
-            holder.stepName.setText(shortDescriptions.get(position));
+        steps.moveToPosition(position);
+            holder.stepName.setText(steps.getString(steps.getColumnIndex(RecipeDBContract.StepEntry.COLUMN_SHORT_DESCRIPTION)));
             holder.stepNumber.setText("Step " + position + ": ");
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -65,20 +65,9 @@ public class RecipeStepRecyclerViewAdapter extends RecyclerView.Adapter<RecipeSt
 
     @Override
     public int getItemCount() {
-        setLists();
-        return shortDescriptions.size();
+        return steps == null ? 0 : steps.getCount();
     }
 
-    private void setLists() {
-        cursor.moveToPosition(0);
-        while (cursor.move(1)) {
-            String shortDescription = cursor.getString(
-                    cursor.getColumnIndex(RecipeDBContract.StepEntry.COLUMN_SHORT_DESCRIPTION));
-            if (!shortDescriptions.contains(shortDescription)){
-                shortDescriptions.add(shortDescription);
-            }
-        }
-    }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.step_number_textview)

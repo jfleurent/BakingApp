@@ -27,6 +27,7 @@ import com.example.jeffr.bakingapp.adapters.RecyclerViewOnClick;
 import com.example.jeffr.bakingapp.data.RecipeDBContract;
 import com.example.jeffr.bakingapp.data.RecipeDBHelper;
 import com.example.jeffr.bakingapp.dataobjects.Recipe;
+import com.example.jeffr.bakingapp.fragments.StepsListFragment;
 
 import java.util.List;
 
@@ -95,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewOnCli
         Timber.d("Start rowSelected");
         Intent intent = new Intent(this,StepListActivity.class);
         cursor.moveToPosition(row);
-        intent.putExtra("Recipe",cursor.getString(cursor.getColumnIndex(RecipeDBContract.RecipeEntry.COLUMN_NAME)));
+        StepsListFragment.recipeName = cursor.getString(cursor.getColumnIndex(RecipeDBContract.RecipeEntry.COLUMN_NAME));
         startActivity(intent);
         Timber.d("End rowSelected");
     }
