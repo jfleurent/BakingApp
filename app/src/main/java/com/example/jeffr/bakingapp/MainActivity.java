@@ -14,6 +14,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -66,11 +67,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewOnCli
         new FetchRecipes().execute();
         if((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
                 == Configuration.SCREENLAYOUT_SIZE_LARGE){
-            recyclerView.setLayoutManager(new GridLayoutManager(this,3));
+            recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.setAdapter(adapter);
         }
         else{
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.setAdapter(adapter);
         }
 

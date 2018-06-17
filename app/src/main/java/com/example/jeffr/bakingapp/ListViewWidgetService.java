@@ -79,9 +79,7 @@ public class ListViewWidgetService extends RemoteViewsService {
                 String quantity = cursor
                         .getString(cursor.getColumnIndex(RecipeDBContract.IngredientEntry.COLUMN_QUANTITY));
 
-                remoteViews.setTextViewText(R.id.ingredient_name, name);
-                remoteViews.setTextViewText(R.id.ingredient_measure,measure);
-                remoteViews.setTextViewText(R.id.ingredient_quantity,quantity);
+                remoteViews.setTextViewText(R.id.ingredient_name, name+" "+ quantity + " "+ measure );
             Intent intent = new Intent();
 
             Timber.d("End getViewAt");

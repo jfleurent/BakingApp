@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.jeffr.bakingapp.R;
@@ -77,8 +78,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         if(theConvertView == null){
             LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             theConvertView = inflater.inflate(R.layout.expandable_list_header,null);
+
         }
         TextView textView = theConvertView.findViewById(R.id.expandable_list_header_textview);
+        ImageView groupIndicator =theConvertView.findViewById(R.id.group_indicator);
+        groupIndicator.setSelected(isExpanded);
         textView.setText(header);
         return theConvertView;
     }

@@ -4,14 +4,17 @@
     android:layout_height="@dimen/recipe_cardview_hieght"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardUseCompatPadding="true">
+    <RelativeLayout
+        style="@style/CardViewBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <ImageView
         android:id="@+id/recipe_item_imageview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+        android:layout_height="200dp"/>
+
     <TextView
+        android:layout_below="@id/recipe_item_imageview"
         android:id="@+id/recipe_title_textview"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
@@ -19,8 +22,7 @@
         android:textAlignment="center"
         android:text="Recipe"
         android:textSize="@dimen/recipe_cardview_title_size"
-        android:textStyle="bold"
-        android:textColor="@color/cardview_light_background"/>
+        android:textStyle="bold" />
 </RelativeLayout>
 
 

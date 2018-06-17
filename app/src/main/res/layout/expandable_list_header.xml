@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="100dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardUseCompatPadding="true">
-    <TextView
-        android:id="@+id/expandable_list_header_textview"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textAlignment="center"/>
+        android:layout_height="match_parent"
+        style="@style/CardViewBackground">
+        <TextView
+            style="@style/CardViewBackground"
+            android:id="@+id/expandable_list_header_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textAlignment="center"/>
+        <ImageView
+            android:id="@+id/group_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/ingredients_selector"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
 
 </android.support.v7.widget.CardView>

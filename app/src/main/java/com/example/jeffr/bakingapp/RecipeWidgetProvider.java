@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import com.example.jeffr.bakingapp.fragments.StepsListFragment;
+
 import timber.log.Timber;
 
 public class RecipeWidgetProvider extends AppWidgetProvider {
@@ -73,7 +75,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
             // set intent for item click (opens main activity)
             Intent viewIntent = new Intent(context, StepListActivity.class);
-            viewIntent.putExtra("Recipe", ListViewWidgetService.recipes[ListViewWidgetService.recipesIndex%4]);
+            StepsListFragment.recipeName = ListViewWidgetService.recipes[ListViewWidgetService.recipesIndex%4];
 
             PendingIntent viewPendingIntent = PendingIntent.getActivity(context, 0, viewIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             remoteViews.setOnClickPendingIntent(R.id.widget_recipe_imageview, viewPendingIntent);

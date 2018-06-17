@@ -8,4 +8,18 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="ActivityBackground">
+        <item name="android:background">@color/colorPrimaryLight</item>
+    </style>
+
+    <style name="CardViewBackground">
+        <item name="android:background">@color/colorPrimaryExtraLight</item>
+    </style>
+
+    <style name="WidgetListViewTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/widget_ingredient_text_size</item>
+    </style>
+
 </resources>

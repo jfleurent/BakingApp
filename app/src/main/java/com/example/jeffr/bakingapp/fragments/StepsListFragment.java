@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.example.jeffr.bakingapp.R;
 import com.example.jeffr.bakingapp.StepActivity;
+import com.example.jeffr.bakingapp.StepListActivity;
 import com.example.jeffr.bakingapp.adapters.ExpandableListAdapter;
 import com.example.jeffr.bakingapp.adapters.RecipeStepRecyclerViewAdapter;
 import com.example.jeffr.bakingapp.adapters.RecyclerViewOnClick;
@@ -34,6 +35,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
+
+import static com.example.jeffr.bakingapp.StepListActivity.setPlayer;
 
 public class StepsListFragment extends Fragment implements RecyclerViewOnClick, LoaderManager.LoaderCallbacks<Cursor>  {
     private static final int STEP_LIST_LOADER = 595;
@@ -52,9 +55,6 @@ public class StepsListFragment extends Fragment implements RecyclerViewOnClick, 
     @BindView(R.id.step_list_recyclerview)
     RecyclerView stepListRecyclerView;
 
-    @BindView(R.id.step_list_recipe_textview)
-    TextView recipeTitle;
-
     RecipeStepRecyclerViewAdapter adapter;
     ArrayAdapter<String> adapter2;
 
@@ -70,7 +70,6 @@ public class StepsListFragment extends Fragment implements RecyclerViewOnClick, 
         ButterKnife.bind(this,rootView);
         getActivity().getSupportLoaderManager().initLoader(STEP_LIST_LOADER,null,this);
         getActivity().getSupportLoaderManager().initLoader(INGREDIENT_LIST_LOADER,null,this);
-        recipeTitle.setText(recipeName);
         recipeImage.setImageResource(getDrawableResource(recipeName));
         adapter = new RecipeStepRecyclerViewAdapter();
         adapter.setRecyclerViewOnClick(this);
@@ -102,9 +101,16 @@ public class StepsListFragment extends Fragment implements RecyclerViewOnClick, 
 
     @Override
     public void rowSelected(int row) {
-        Intent intent = new Intent(getActivity(), StepActivity.class);
-        intent.putExtra("Step Number", row);
-        startActivity(intent);
+        if(!StepListActivity.stepActivityTwoPane) {
+            Intent intent = new Intent(getActivity(), StepActivity.class);
+            intent.putExtra("Step Number", row);
+            startActivity(intent);
+        }
+        else{
+            StepListActivity.cursor.moveToPosition(row);
+            StepListActivity.stepDescription.setText(StepListActivity.cursor.getString(0));
+            setPlayer();
+        }
     }
 
     private int getDrawableResource(String recipe) {
@@ -179,6 +185,7 @@ public class StepsListFragment extends Fragment implements RecyclerViewOnClick, 
             case INGREDIENT_LIST_LOADER:
                 initData(data);
                 ExpandableListAdapter expandableListAdapter = new ExpandableListAdapter(getActivity(),headers,stringListHashMap);
+
                 ingredientList.setAdapter(expandableListAdapter);
                 break;
             default:

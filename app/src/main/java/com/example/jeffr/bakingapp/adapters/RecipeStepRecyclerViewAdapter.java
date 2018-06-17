@@ -52,7 +52,7 @@ public class RecipeStepRecyclerViewAdapter extends RecyclerView.Adapter<RecipeSt
         Timber.d("Start onBindViewHolder");
         steps.moveToPosition(position);
             holder.stepName.setText(steps.getString(steps.getColumnIndex(RecipeDBContract.StepEntry.COLUMN_SHORT_DESCRIPTION)));
-            holder.stepNumber.setText("Step " + position + ": ");
+            holder.stepNumber.setText( position == 0 ? "" :"Step " + position + ": ");
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
