@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -17,7 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.TextView;
+
 
 import com.example.jeffr.bakingapp.R;
 import com.example.jeffr.bakingapp.StepActivity;
@@ -26,7 +28,7 @@ import com.example.jeffr.bakingapp.adapters.ExpandableListAdapter;
 import com.example.jeffr.bakingapp.adapters.RecipeStepRecyclerViewAdapter;
 import com.example.jeffr.bakingapp.adapters.RecyclerViewOnClick;
 import com.example.jeffr.bakingapp.data.RecipeDBContract;
-import com.example.jeffr.bakingapp.data.RecipeDBHelper;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +41,10 @@ import timber.log.Timber;
 import static com.example.jeffr.bakingapp.StepListActivity.setPlayer;
 
 public class StepsListFragment extends Fragment implements RecyclerViewOnClick, LoaderManager.LoaderCallbacks<Cursor>  {
+
+    @VisibleForTesting
+    CountingIdlingResource countingIdilingResource = new CountingIdlingResource("LIST_LOADER");
+
     private static final int STEP_LIST_LOADER = 595;
     private static final int INGREDIENT_LIST_LOADER = 345;
     public static String recipeName;
@@ -68,11 +74,12 @@ public class StepsListFragment extends Fragment implements RecyclerViewOnClick, 
         Timber.d("Start onCreateView");
         View rootView = inflater.inflate(R.layout.fragment_steps_list, container, false);
         ButterKnife.bind(this,rootView);
-        getActivity().getSupportLoaderManager().initLoader(STEP_LIST_LOADER,null,this);
-        getActivity().getSupportLoaderManager().initLoader(INGREDIENT_LIST_LOADER,null,this);
-        recipeImage.setImageResource(getDrawableResource(recipeName));
         adapter = new RecipeStepRecyclerViewAdapter();
         adapter.setRecyclerViewOnClick(this);
+        getActivity().getSupportLoaderManager().initLoader(STEP_LIST_LOADER,null,this);
+        countingIdilingResource.increment();
+        getActivity().getSupportLoaderManager().initLoader(INGREDIENT_LIST_LOADER,null,this);
+        recipeImage.setImageResource(getDrawableResource(recipeName));
         stepListRecyclerView.setAdapter(adapter);
         stepListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         Timber.d("End onCreateView");
@@ -137,8 +144,10 @@ public class StepsListFragment extends Fragment implements RecyclerViewOnClick, 
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
         Timber.d("Start onCreateLoader");
+
         switch (id) {
             case STEP_LIST_LOADER:
+
                 Uri stepQueryUri = RecipeDBContract.StepEntry.STEP_CONTENT_URI;
                 Timber.d("Queried: "+stepQueryUri.toString());
 
@@ -181,12 +190,13 @@ public class StepsListFragment extends Fragment implements RecyclerViewOnClick, 
                 stepCurosr = data;
                 adapter.setSteps(data);
                 stepListRecyclerView.setAdapter(adapter);
+
                 break;
             case INGREDIENT_LIST_LOADER:
                 initData(data);
                 ExpandableListAdapter expandableListAdapter = new ExpandableListAdapter(getActivity(),headers,stringListHashMap);
-
                 ingredientList.setAdapter(expandableListAdapter);
+                countingIdilingResource.decrement();
                 break;
             default:
                 Timber.d("Loader Not Implemented: " + loader.getId());
@@ -206,5 +216,11 @@ public class StepsListFragment extends Fragment implements RecyclerViewOnClick, 
         headers.add("Ingredients");
         stringListHashMap.put(headers.get(0),getIngredientStrings(data));
         Timber.d("End initData");
+    }
+
+    @VisibleForTesting
+    @NonNull
+    public CountingIdlingResource getCountingIdilingResource() {
+        return countingIdilingResource;
     }
 }

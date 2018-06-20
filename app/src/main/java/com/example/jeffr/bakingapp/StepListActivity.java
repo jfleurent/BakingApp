@@ -12,8 +12,6 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.example.jeffr.bakingapp.data.RecipeDBContract;
-import com.example.jeffr.bakingapp.dataobjects.Recipe;
-import com.example.jeffr.bakingapp.fragments.StepsListFragment;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
@@ -34,6 +32,8 @@ import timber.log.Timber;
 import static com.example.jeffr.bakingapp.fragments.StepsListFragment.recipeName;
 
 public class StepListActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+
+
     private static final int STEP_LIST_LOADER = 990;
     public static boolean stepActivityTwoPane;
     public static Cursor cursor;

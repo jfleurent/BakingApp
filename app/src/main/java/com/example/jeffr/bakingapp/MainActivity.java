@@ -14,7 +14,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -65,15 +64,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewOnCli
         context = this;
         setProgressbarVisible();
         new FetchRecipes().execute();
-        if((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
-                == Configuration.SCREENLAYOUT_SIZE_LARGE){
-            recyclerView.setLayoutManager(new GridLayoutManager(this,2));
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
+        if(getResources().getConfiguration().smallestScreenWidthDp >= 600){
+            Timber.d("Large Screen");
+            recyclerView.setLayoutManager(new GridLayoutManager(this,3));
             recyclerView.setAdapter(adapter);
         }
         else{
+            Timber.d("Normal Screen");
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.setAdapter(adapter);
         }
 
