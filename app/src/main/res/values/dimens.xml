@@ -5,8 +5,8 @@
     <dimen name="recipe_cardview_title_size">32sp</dimen>
 
     <!--Widget-->
-    <dimen name="widget_max_height">400dp</dimen>
-    <dimen name="widget_max_width">400dp</dimen>
+    <dimen name="widget_max_height">300dp</dimen>
+    <dimen name="widget_max_width">300dp</dimen>
 
     <!--Widget Ingredient Item-->
     <dimen name="widget_right_padding">10dp</dimen>
