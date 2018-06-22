@@ -38,15 +38,15 @@ import timber.log.Timber;
 import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewOnClick, LoaderManager.LoaderCallbacks<Cursor> {
-        RecyclerView recyclerView;
+    RecyclerView recyclerView;
     RecipeRecyclerViewAdapter adapter;
 
-   static LoaderManager loaderManager;
-   static LoaderManager.LoaderCallbacks<Cursor> loaderCallbacks;
-   static Context context;
-   static ProgressBar progressBar;
+    static LoaderManager loaderManager;
+    static LoaderManager.LoaderCallbacks<Cursor> loaderCallbacks;
+    static Context context;
+    static ProgressBar progressBar;
 
-   private Cursor cursor;
+    private Cursor cursor;
     public static final int RECIPE_LOADER = 505;
 
     @Override
@@ -64,12 +64,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewOnCli
         context = this;
         setProgressbarVisible();
         new FetchRecipes().execute();
-        if(getResources().getConfiguration().smallestScreenWidthDp >= 600){
+        if (getResources().getConfiguration().smallestScreenWidthDp >= 600) {
             Timber.d("Large Screen");
-            recyclerView.setLayoutManager(new GridLayoutManager(this,3));
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
             recyclerView.setAdapter(adapter);
-        }
-        else{
+        } else {
             Timber.d("Normal Screen");
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(adapter);
@@ -78,14 +77,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewOnCli
         Timber.d("End onCreate");
     }
 
-    private void setProgressbarVisible(){
+    private void setProgressbarVisible() {
         Timber.d("Start setProgressbarVisible");
         progressBar.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.INVISIBLE);
         Timber.d("End setProgressbarVisible");
     }
 
-    private void setProgressbarInvisible(){
+    private void setProgressbarInvisible() {
         Timber.d("Start setProgressbarInvisible");
         progressBar.setVisibility(View.INVISIBLE);
         recyclerView.setVisibility(View.VISIBLE);
@@ -95,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewOnCli
     @Override
     public void rowSelected(int row) {
         Timber.d("Start rowSelected");
-        Intent intent = new Intent(this,StepListActivity.class);
+        Intent intent = new Intent(this, StepListActivity.class);
         cursor.moveToPosition(row);
         StepsListFragment.recipeName = cursor.getString(cursor.getColumnIndex(RecipeDBContract.RecipeEntry.COLUMN_NAME));
         startActivity(intent);
@@ -109,13 +108,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewOnCli
         switch (id) {
             case RECIPE_LOADER:
                 Uri recipeQueryUri = RecipeDBContract.RecipeEntry.RECIPE_CONTENT_URI;
-                Timber.d("Queried: "+recipeQueryUri.toString());
+                Timber.d("Queried: " + recipeQueryUri.toString());
                 return new android.support.v4.content.CursorLoader(this,
                         recipeQueryUri,
                         null,
                         null,
                         null,
-                         null);
+                        null);
             default:
                 Timber.d("Loader Not Implemented: " + id);
         }

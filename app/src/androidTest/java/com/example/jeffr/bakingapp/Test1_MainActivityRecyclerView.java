@@ -19,7 +19,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 
 @RunWith(AndroidJUnit4.class)
-public class MainActivityRecyclerViewTest {
+public class Test1_MainActivityRecyclerView {
     @Rule public IntentsTestRule <MainActivity> mainActivityActivityTestRule =
             new IntentsTestRule<>(MainActivity.class);
 

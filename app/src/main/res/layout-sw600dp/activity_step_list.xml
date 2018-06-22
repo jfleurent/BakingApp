@@ -10,7 +10,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/master_list_fragment"
         android:name="com.example.jeffr.bakingapp.fragments.StepsListFragment"
-        android:layout_width="500dp"
+        android:layout_width="@dimen/step_list_fragment_width"
         android:layout_height="wrap_content" />
 
     <LinearLayout
@@ -29,7 +29,7 @@
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="@dimen/step_cardview_hieght"
             android:layout_weight="1"
             app:cardUseCompatPadding="true">
 
@@ -42,11 +42,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
-                    android:textSize="20sp" />
+                    android:textSize="@dimen/step_text_size" />
 
             </RelativeLayout>
-
-
 
         </android.support.v7.widget.CardView>
     </LinearLayout>

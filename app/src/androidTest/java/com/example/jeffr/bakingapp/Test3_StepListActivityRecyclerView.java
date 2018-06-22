@@ -17,7 +17,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 
 @RunWith(AndroidJUnit4.class)
-public class StepListActivityRecyclerViewTest {
+public class Test3_StepListActivityRecyclerView {
     @Rule
     public IntentsTestRule<StepListActivity> stepListActivityIntentsTestRule =
             new IntentsTestRule<>(StepListActivity.class);
@@ -26,6 +26,5 @@ public class StepListActivityRecyclerViewTest {
     public void recyclerViewOpensNewActivity(){
         Espresso.onView(ViewMatchers.withId(R.id.step_list_recyclerview)).perform(actionOnItemAtPosition(0, click()));
         Intents.intended(IntentMatchers.hasComponent(new ComponentName(InstrumentationRegistry.getTargetContext(),StepActivity.class)));
-
     }
 }

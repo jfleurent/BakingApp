@@ -1,4 +1,4 @@
-package com.example.jeffr.bakingapp;
+package com.example.jeffr.bakingapp.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -9,6 +9,9 @@ import android.net.Uri;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import com.example.jeffr.bakingapp.R;
+import com.example.jeffr.bakingapp.StepListActivity;
+import com.example.jeffr.bakingapp.widget.ListViewWidgetService;
 import com.example.jeffr.bakingapp.fragments.StepsListFragment;
 
 import timber.log.Timber;
@@ -59,10 +62,9 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         Timber.d("Start onUpdate");
         for (int i = 0; i < appWidgetIds.length; ++i) {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
-            // set intent for widget service that will create the views
             Intent serviceIntent = new Intent(context, ListViewWidgetService.class);
             serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
-            serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME))); // embed extras so they don't get ignored
+            serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
 
             remoteViews.setRemoteAdapter(R.id.ingredient_list_view,serviceIntent);
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds,R.id.ingredient_list_view);
@@ -73,14 +75,13 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
             remoteViews.setOnClickPendingIntent(R.id.widget_previous_button, getPendingSelfIntent(context, PREVIOUS_BUTTON,appWidgetIds));
             remoteViews.setOnClickPendingIntent(R.id.widget_next_button, getPendingSelfIntent(context, NEXT_BUTTON,appWidgetIds));
 
-            // set intent for item click (opens main activity)
             Intent viewIntent = new Intent(context, StepListActivity.class);
             StepsListFragment.recipeName = ListViewWidgetService.recipes[ListViewWidgetService.recipesIndex%4];
 
             PendingIntent viewPendingIntent = PendingIntent.getActivity(context, 0, viewIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             remoteViews.setOnClickPendingIntent(R.id.widget_recipe_imageview, viewPendingIntent);
 
-            // update widget
+
             appWidgetManager.updateAppWidget(appWidgetIds[i], remoteViews);
         }
         Timber.d("End onUpdate");
@@ -97,16 +98,22 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     }
 
     private int getDrawableResource(int recipeIndex){
+        Timber.d("Start getDrawableResource");
         switch (recipeIndex){
             case  0:
+                Timber.d("End getDrawableResource");
                 return R.drawable.nutella_pie;
             case  1:
+                Timber.d("End getDrawableResource");
                 return R.drawable.brownies;
             case  2:
+                Timber.d("End getDrawableResource");
                 return R.drawable.yellow_cake;
             case  3:
+                Timber.d("End getDrawableResource");
                 return R.drawable.cheese_cake;
             default:
+                Timber.d("No Resource Found");
                 return 0;
         }
     }

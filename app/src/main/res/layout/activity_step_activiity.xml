@@ -1,96 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/step_linear_layout"
-    style="@style/ActivityBackground"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".StepActivity">
+    android:layout_height="match_parent">
 
-
-    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-        android:id="@+id/instruction_video_player"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/step_instruction_video_height"
-        android:layout_weight="3"></com.google.android.exoplayer2.ui.SimpleExoPlayerView>
-
-
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_weight="2"
-        app:cardUseCompatPadding="true">
-
-        <RelativeLayout
-            style="@style/CardViewBackground"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/step_description_textview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:textSize="20sp" />
-        </RelativeLayout>
-
-    </android.support.v7.widget.CardView>
-
-
-    <android.support.v7.widget.CardView
+    <LinearLayout
+        android:id="@+id/step_linear_layout"
+        style="@style/ActivityBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        app:cardUseCompatPadding="true">
+        android:orientation="vertical"
+        tools:context=".StepActivity">
 
-        <RelativeLayout
-            style="@style/CardViewBackground"
+
+        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+            android:id="@+id/instruction_video_player"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="@dimen/step_instruction_video_height"
+            android:layout_weight="3">
 
-            <LinearLayout
-                android:id="@+id/previous_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/ic_previoud_recipe" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/previous_step"
-                    android:textSize="@dimen/step_text_size" />
-            </LinearLayout>
+        </com.google.android.exoplayer2.ui.SimpleExoPlayerView>
 
 
-            <LinearLayout
-                android:id="@+id/next_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:orientation="horizontal">
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/step_cardview_hieght"
+            android:layout_weight="2"
+            app:cardUseCompatPadding="true">
+
+            <RelativeLayout
+                style="@style/CardViewBackground"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
                 <TextView
+                    android:layout_centerVertical="true"
+                    android:id="@+id/step_description_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/step_text_size" />
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/step_buttons_layout_hieght"
+            android:layout_weight="1"
+            app:cardUseCompatPadding="true">
+
+            <RelativeLayout
+                style="@style/CardViewBackground"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_centerVertical="true"
+                    android:id="@+id/previous_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="@string/next_step"
-                    android:textSize="@dimen/step_text_size" />
+                    android:orientation="horizontal">
 
-                <ImageView
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/ic_previoud_recipe" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="@string/previous_step"
+                        android:textSize="@dimen/step_text_size" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_centerVertical="true"
+                    android:id="@+id/next_layout"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/ic_next_recipe" />
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:orientation="horizontal">
 
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="@string/next_step"
+                        android:textSize="@dimen/step_text_size" />
 
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/ic_next_recipe" />
 
-</LinearLayout>
+                </LinearLayout>
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
+</ScrollView>

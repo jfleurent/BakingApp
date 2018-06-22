@@ -25,8 +25,6 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import timber.log.Timber;
 
 import static com.example.jeffr.bakingapp.fragments.StepsListFragment.recipeName;
@@ -45,6 +43,7 @@ public class StepListActivity extends AppCompatActivity implements LoaderManager
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Timber.d("Start onCreate");
         setContentView(R.layout.activity_step_list);
         context= this;
         getSupportActionBar().setTitle(recipeName);
@@ -57,6 +56,7 @@ public class StepListActivity extends AppCompatActivity implements LoaderManager
         else{
             stepActivityTwoPane = false;
         }
+        Timber.d("End onCreate");
     }
 
     @NonNull
@@ -118,9 +118,11 @@ public class StepListActivity extends AppCompatActivity implements LoaderManager
     @Override
     protected void onPause() {
         super.onPause();
+        Timber.d("Start onPause");
         if(player != null){
             player.stop();
             player.release();
         }
+        Timber.d("End onPause");
     }
 }

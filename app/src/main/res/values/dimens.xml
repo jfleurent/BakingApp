@@ -3,6 +3,7 @@
     <!--Recipe CardView-->
     <dimen name="recipe_cardview_hieght">250dp</dimen>
     <dimen name="recipe_cardview_title_size">32sp</dimen>
+    <dimen name="recipe_image_height">200dp</dimen>
 
     <!--Widget-->
     <dimen name="widget_max_height">300dp</dimen>
@@ -23,6 +24,19 @@
     <!--Step Layout-->
     <dimen name="step_instruction_video_height">300dp</dimen>
     <dimen name="step_text_size">20sp</dimen>
+    <dimen name="step_cardview_hieght">300dp</dimen>
+    <dimen name="step_buttons_layout_hieght">75dp</dimen>
+
+    <!--Step List Layout-->
+    <dimen name="step_list_fragment_width">500dp</dimen>
+
+    <!--Ingredient ExpandableListView Layout-->
+    <dimen name="expandable_listview_header_height">100dp</dimen>
+    <dimen name="expandable_listview_header_text_size">20sp</dimen>
+    <dimen name="expandable_listview_item_text_size">20sp</dimen>
+    <dimen name="expandable_listview_item_padding_bottom">10dp</dimen>
+    <dimen name="expandable_listview_item_view_height">1dp</dimen>
+
 
 
 </resources>

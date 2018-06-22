@@ -136,6 +136,7 @@ public class StepsListFragment extends Fragment implements RecyclerViewOnClick, 
                 Timber.d("End getDrawableResource");
                 return R.drawable.cheese_cake;
             default:
+                Timber.d("No Resource Found");
                 return 0;
         }
     }

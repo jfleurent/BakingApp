@@ -3,7 +3,11 @@ package com.example.jeffr.bakingapp;
 import android.app.Dialog;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -47,7 +51,6 @@ import static com.example.jeffr.bakingapp.fragments.StepsListFragment.recipeName
 public class StepActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int STEP_LOADER = 167;
-    private static final String TAG = StepActivity.class.getSimpleName();
     private static int stepNumber;
     Cursor cursor;
     SimpleExoPlayer player;
@@ -74,13 +77,13 @@ public class StepActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_activiity);
         Timber.d("Start onCreate");
-        stepNumber = getIntent().getExtras().getInt("Step Number");
-        initalizeLayout();
+        stepNumber = getIntent().getExtras() == null ? 1 : getIntent().getExtras().getInt("Step Number");
+        initializeLayout();;
         Timber.d("End onCreate");
     }
 
-    private void initalizeLayout(){
-        Timber.d("Start initalizeLayout");
+    private void initializeLayout(){
+        Timber.d("Start initializeLayout");
         ButterKnife.bind(this);
         getSupportActionBar().setTitle(recipeName);
         getSupportLoaderManager().initLoader(STEP_LOADER, null, this);
@@ -95,6 +98,7 @@ public class StepActivity extends AppCompatActivity implements LoaderManager.Loa
                     stepNumber++;
                 }
                 stepDescription.setText(cursor.getString(0));
+                releasePlayer();
                 setPlayer();
             }
         });
@@ -110,10 +114,11 @@ public class StepActivity extends AppCompatActivity implements LoaderManager.Loa
                     stepNumber--;
                 }
                 stepDescription.setText(cursor.getString(0));
+                releasePlayer();
                 setPlayer();
             }
         });
-        Timber.d("End initalizeLayout");
+        Timber.d("End initializeLayout");
     }
 
     @NonNull
@@ -175,16 +180,20 @@ public class StepActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private void releasePlayer(){
         Timber.d("Start releasePlayer");
-        player.stop();
-        player.release();
+        if(player != null){
+            player.stop();
+            player.release();
+        }
         Timber.d("End releasePlayer");
     }
 
     private void closeFullscreenDialog() {
+        Timber.d("Start closeFullscreenDialog");
         setContentView(R.layout.activity_step_activiity);
-        initalizeLayout();
+        initializeLayout();
         mExoPlayerFullscreen = false;
         mFullScreenDialog.dismiss();
+        Timber.d("End closeFullscreenDialog");
     }
 
     @Override

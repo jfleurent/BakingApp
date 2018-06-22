@@ -86,7 +86,7 @@ public class RecipeRecyclerViewAdapter extends RecyclerView.Adapter<RecipeRecycl
                 Timber.d("End getDrawableResource");
                 return R.drawable.cheese_cake;
             default:
-                Timber.d("End getDrawableResource");
+                Timber.d("No Resource Found");
                 return 0;
         }
 

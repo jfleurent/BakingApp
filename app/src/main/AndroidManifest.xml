@@ -14,7 +14,7 @@
         android:name=".BakingApplication">
 
         <!-- For Recipe Widgets-->
-        <receiver android:name=".RecipeWidgetProvider">
+        <receiver android:name=".widget.RecipeWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -24,7 +24,7 @@
                 android:resource="@xml/recipe_widget_info" />
         </receiver>
 
-        <service android:name=".ListViewWidgetService"
+        <service android:name=".widget.ListViewWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"
             android:exported="false" />
 

@@ -1,4 +1,4 @@
-package com.example.jeffr.bakingapp;
+package com.example.jeffr.bakingapp.widget;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.example.jeffr.bakingapp.R;
 import com.example.jeffr.bakingapp.data.RecipeDBContract;
 
 import timber.log.Timber;
@@ -14,6 +15,7 @@ import timber.log.Timber;
 public class ListViewWidgetService extends RemoteViewsService {
     static String[] recipes = {"Nutella Pie","Brownies","Yellow Cake","Cheesecake"};
     static int recipesIndex = 0;
+
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
         return new ListViewRemoteViewsFactory(this.getApplicationContext());
@@ -71,7 +73,7 @@ public class ListViewWidgetService extends RemoteViewsService {
             Timber.d("Start getViewAt");
             if (cursor == null || cursor.getCount() == 0) return null;
             cursor.moveToPosition(i);
-            RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(),R.layout.ingredeint_list_item);
+            RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(), R.layout.ingredeint_list_item);
                 String name = cursor
                         .getString(cursor.getColumnIndex(RecipeDBContract.IngredientEntry.COLUMN_NAME));
                 String measure = cursor

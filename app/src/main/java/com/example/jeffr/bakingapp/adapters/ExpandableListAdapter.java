@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
+import timber.log.Timber;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
@@ -22,9 +23,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private HashMap<String,List<String>> listHashMap;
 
     public ExpandableListAdapter(Context context, List<String> itemList, HashMap<String, List<String>> listHashMap) {
+        Timber.d("Start ExpandableListAdapter");
         this.context = context;
         this.itemList = itemList;
         this.listHashMap = listHashMap;
+        Timber.d("End ExpandableListAdapter");
     }
 
     @Override
@@ -46,6 +49,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView,
                              final ViewGroup parent) {
+        Timber.d("Start getChildView");
         final String itemString = (String)getChild(groupPosition,childPosition);
         if(convertView == null){
             LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -53,6 +57,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
         TextView textView = convertView.findViewById(R.id.expandable_list_item_textview);
         textView.setText(itemString);
+        Timber.d("End getChildView");
         return convertView;
     }
 
@@ -73,6 +78,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View theConvertView, ViewGroup parent) {
+        Timber.d("Start getGroupView");
         String header = itemList.get(groupPosition);
 
         if(theConvertView == null){
@@ -84,6 +90,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         ImageView groupIndicator =theConvertView.findViewById(R.id.group_indicator);
         groupIndicator.setSelected(isExpanded);
         textView.setText(header);
+        Timber.d("End getGroupView");
         return theConvertView;
     }
 
