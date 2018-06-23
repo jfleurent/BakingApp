@@ -44,41 +44,43 @@ public class FetchRecipes extends AsyncTask<Integer, Void, List<Recipe>> {
     @Override
     protected void onPostExecute(List<Recipe> recipes) {
         Timber.d("Start onPostExecute");
-        for(Recipe recipe : recipes){
-            ContentValues cv = new ContentValues();
-            cv.put(RecipeDBContract.RecipeEntry.COLUMN_ID,recipe.getId());
-            cv.put(RecipeDBContract.RecipeEntry.COLUMN_NAME,recipe.getName());
-            cv.put(RecipeDBContract.RecipeEntry.COLUMN_SERVINGS,recipe.getServings());
-            MainActivity.context.getContentResolver().insert(
-                    RecipeDBContract.RecipeEntry.RECIPE_CONTENT_URI,cv
-            );
-            int i = 0;
-            for(Ingredient ingredient : recipe.getIngredients()){
-                cv.clear();
-                cv.put(RecipeDBContract.IngredientEntry.COLUMN_ID,recipe.getId()*50+i++);
-                cv.put(RecipeDBContract.IngredientEntry.COLUMN_MEASURE,ingredient.getMeasure());
-                cv.put(RecipeDBContract.IngredientEntry.COLUMN_NAME,ingredient.getIngredient());
-                cv.put(RecipeDBContract.IngredientEntry.COLUMN_QUANTITY,ingredient.getQuantity());
-                cv.put(RecipeDBContract.IngredientEntry.COLUMN_RECIPE_ID,recipe.getId());
+        if(recipes != null) {
+            for (Recipe recipe : recipes) {
+                ContentValues cv = new ContentValues();
+                cv.put(RecipeDBContract.RecipeEntry.COLUMN_ID, recipe.getId());
+                cv.put(RecipeDBContract.RecipeEntry.COLUMN_NAME, recipe.getName());
+                cv.put(RecipeDBContract.RecipeEntry.COLUMN_SERVINGS, recipe.getServings());
                 MainActivity.context.getContentResolver().insert(
-                        RecipeDBContract.IngredientEntry.INGREDIENT_CONTENT_URI,cv
+                        RecipeDBContract.RecipeEntry.RECIPE_CONTENT_URI, cv
                 );
-            }
-            for(Step step : recipe.getSteps()){
-                cv.clear();
-                cv.put(RecipeDBContract.StepEntry.COLUMN_DESCRIPTION,step.getDescription());
-                cv.put(RecipeDBContract.StepEntry.COLUMN_ID,recipe.getId()*50+step.getId());
-                cv.put(RecipeDBContract.StepEntry.COLUMN_RECIPE_ID,recipe.getId());
-                cv.put(RecipeDBContract.StepEntry.COLUMN_SHORT_DESCRIPTION,step.getShortDescription());
-                cv.put(RecipeDBContract.StepEntry.COLUMN_THUMBNAIL_URL,step.getThumbnialURL());
-                cv.put(RecipeDBContract.StepEntry.COLUMN_VIDEO_URL,step.getVideoURL());
-                MainActivity.context.getContentResolver().insert(
-                        RecipeDBContract.StepEntry.STEP_CONTENT_URI,cv
-                );
-            }
+                int i = 0;
+                for (Ingredient ingredient : recipe.getIngredients()) {
+                    cv.clear();
+                    cv.put(RecipeDBContract.IngredientEntry.COLUMN_ID, recipe.getId() * 50 + i++);
+                    cv.put(RecipeDBContract.IngredientEntry.COLUMN_MEASURE, ingredient.getMeasure());
+                    cv.put(RecipeDBContract.IngredientEntry.COLUMN_NAME, ingredient.getIngredient());
+                    cv.put(RecipeDBContract.IngredientEntry.COLUMN_QUANTITY, ingredient.getQuantity());
+                    cv.put(RecipeDBContract.IngredientEntry.COLUMN_RECIPE_ID, recipe.getId());
+                    MainActivity.context.getContentResolver().insert(
+                            RecipeDBContract.IngredientEntry.INGREDIENT_CONTENT_URI, cv
+                    );
+                }
+                for (Step step : recipe.getSteps()) {
+                    cv.clear();
+                    cv.put(RecipeDBContract.StepEntry.COLUMN_DESCRIPTION, step.getDescription());
+                    cv.put(RecipeDBContract.StepEntry.COLUMN_ID, recipe.getId() * 50 + step.getId());
+                    cv.put(RecipeDBContract.StepEntry.COLUMN_RECIPE_ID, recipe.getId());
+                    cv.put(RecipeDBContract.StepEntry.COLUMN_SHORT_DESCRIPTION, step.getShortDescription());
+                    cv.put(RecipeDBContract.StepEntry.COLUMN_THUMBNAIL_URL, step.getThumbnialURL());
+                    cv.put(RecipeDBContract.StepEntry.COLUMN_VIDEO_URL, step.getVideoURL());
+                    MainActivity.context.getContentResolver().insert(
+                            RecipeDBContract.StepEntry.STEP_CONTENT_URI, cv
+                    );
+                }
 
-            MainActivity.loaderManager.initLoader(RECIPE_LOADER, null, loaderCallbacks);
+                MainActivity.loaderManager.initLoader(RECIPE_LOADER, null, loaderCallbacks);
 
+            }
         }
         Timber.d("End onPostExecute");
     }

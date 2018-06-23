@@ -23,8 +23,11 @@
 
     <!--Step Layout-->
     <dimen name="step_instruction_video_height">300dp</dimen>
+    <dimen name="step_instruction_video_height_600dp_port">500dp</dimen>
     <dimen name="step_text_size">20sp</dimen>
+    <dimen name="step_text_size_600dp">30sp</dimen>
     <dimen name="step_cardview_hieght">300dp</dimen>
+    <dimen name="step_cardview_hieght_600dp_portrait">150dp</dimen>
     <dimen name="step_buttons_layout_hieght">75dp</dimen>
 
     <!--Step List Layout-->

@@ -38,7 +38,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
+import static com.example.jeffr.bakingapp.StepListActivity.isPlaying;
+import static com.example.jeffr.bakingapp.StepListActivity.playerPosition;
+import static com.example.jeffr.bakingapp.StepListActivity.releasePlayer;
 import static com.example.jeffr.bakingapp.StepListActivity.setPlayer;
+import static com.example.jeffr.bakingapp.StepListActivity.stepNumber;
 
 public class StepsListFragment extends Fragment implements RecyclerViewOnClick, LoaderManager.LoaderCallbacks<Cursor>  {
 
@@ -77,7 +81,6 @@ public class StepsListFragment extends Fragment implements RecyclerViewOnClick, 
         adapter = new RecipeStepRecyclerViewAdapter();
         adapter.setRecyclerViewOnClick(this);
         getActivity().getSupportLoaderManager().initLoader(STEP_LIST_LOADER,null,this);
-        countingIdilingResource.increment();
         getActivity().getSupportLoaderManager().initLoader(INGREDIENT_LIST_LOADER,null,this);
         recipeImage.setImageResource(getDrawableResource(recipeName));
         stepListRecyclerView.setAdapter(adapter);
@@ -116,6 +119,10 @@ public class StepsListFragment extends Fragment implements RecyclerViewOnClick, 
         else{
             StepListActivity.cursor.moveToPosition(row);
             StepListActivity.stepDescription.setText(StepListActivity.cursor.getString(0));
+            isPlaying = false;
+            playerPosition = 0;
+            stepNumber = row;
+            releasePlayer();
             setPlayer();
         }
     }
@@ -212,6 +219,7 @@ public class StepsListFragment extends Fragment implements RecyclerViewOnClick, 
 
     private void initData(Cursor data){
         Timber.d("Start initData");
+        countingIdilingResource.increment();
         headers = new ArrayList<>();
         stringListHashMap = new HashMap<>();
         headers.add("Ingredients");
