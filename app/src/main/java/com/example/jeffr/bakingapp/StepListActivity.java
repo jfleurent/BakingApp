@@ -31,8 +31,8 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
-import butterknife.BindView;
 import timber.log.Timber;
 
 import static com.example.jeffr.bakingapp.fragments.StepsListFragment.recipeName;
@@ -57,6 +57,11 @@ public class StepListActivity extends AppCompatActivity implements LoaderManager
         super.onCreate(savedInstanceState);
         Timber.d("Start onCreate");
         setContentView(R.layout.activity_step_list);
+        if(savedInstanceState != null){
+            playerPosition = savedInstanceState.getLong("Position");
+            isPlaying = savedInstanceState.getBoolean("IsPlaying");
+            stepNumber = savedInstanceState.getInt("Step Number");
+        }
         context= this;
         getSupportActionBar().setTitle(recipeName);
         simpleExoPlayerView = findViewById(R.id.instruction_video_player);
@@ -112,22 +117,32 @@ public class StepListActivity extends AppCompatActivity implements LoaderManager
 
     }
 
-    public static  void setPlayer() {
+    public static void setPlayer(){
         Timber.d("Start setPlayer");
         TrackSelector trackSelector = new DefaultTrackSelector();
         LoadControl loadControl = new DefaultLoadControl();
-        player = ExoPlayerFactory.newSimpleInstance(context, trackSelector, loadControl);
-        if (cursor != null) {
+        player = ExoPlayerFactory.newSimpleInstance(context,trackSelector,loadControl);
+        if(cursor != null){
             String userAgent = Util.getUserAgent(context, "BakingApp");
-            MediaSource videoSource = new ExtractorMediaSource(Uri.parse(setThumbnailVisibilityAndGetURLString(cursor.getString(1),cursor.getString(2))), new DefaultDataSourceFactory(
+            MediaSource videoSource = new ExtractorMediaSource(Uri.parse(cursor.getString(1)), new DefaultDataSourceFactory(
                     context, userAgent), new DefaultExtractorsFactory(), null, null);
             player.prepare(videoSource);
             simpleExoPlayerView.setPlayer(player);
             player.setPlayWhenReady(isPlaying);
-            Timber.d("Playing? :" + isPlaying);
             player.seekTo(playerPosition);
+            Picasso.with(context)
+                    .load(Uri.parse(cursor.getString(2) == null ? "" : cursor.getString(2) ))
+                    .error(R.drawable.baking_icon)
+                    .into(thumbnail);
+            if(!cursor.getString(1).equals("")){
+                thumbnail.setVisibility(View.INVISIBLE);
+            }
+            else {
+                thumbnail.setVisibility(View.VISIBLE);
+            }
             Timber.d("End setPlayer");
         }
+
     }
 
     public static void releasePlayer(){
@@ -140,30 +155,23 @@ public class StepListActivity extends AppCompatActivity implements LoaderManager
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        Timber.d("Start onPause");
-        if (simpleExoPlayerView != null && stepDescription != null) {
-        isPlaying = player.getPlayWhenReady();
-        playerPosition = player.getCurrentPosition();
-        releasePlayer();
-        }
-        Timber.d("End onPause");
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean("IsPlaying", player.getPlayWhenReady());
+        outState.putLong("Position", player.getCurrentPosition());
+        outState.putInt("Step Number", cursor.getPosition());
+        super.onSaveInstanceState(outState);
     }
 
-    private static String setThumbnailVisibilityAndGetURLString(String videoUrl, String thumbnailUrl){
-        if(!videoUrl.equals("")){
-            thumbnail.setVisibility(View.INVISIBLE);
-            return videoUrl;
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Timber.d("Start onStop");
+        if (simpleExoPlayerView != null && stepDescription != null) {
+            isPlaying = player.getPlayWhenReady();
+            playerPosition = player.getCurrentPosition();
+            releasePlayer();
         }
-        else if(thumbnailUrl != null){
-            thumbnail.setVisibility(View.INVISIBLE);
-            return thumbnailUrl;
-        }
-        else{
-            thumbnail.setVisibility(View.VISIBLE);
-            return "";
-        }
+        Timber.d("End onStop");
     }
 
     @Override

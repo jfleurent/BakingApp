@@ -3,10 +3,7 @@ package com.example.jeffr.bakingapp;
 import android.app.Dialog;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -35,8 +32,6 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
@@ -49,14 +44,9 @@ public class StepActivity extends AppCompatActivity implements LoaderManager.Loa
     private static int stepNumber;
     Cursor cursor;
     SimpleExoPlayer player;
-    boolean mExoPlayerFullscreen;
-    Dialog mFullScreenDialog;
 
     @BindView(R.id.next_layout)
     LinearLayout nextButton;
-
-    @BindView(R.id.step_linear_layout)
-    LinearLayout setLayout;
 
     @BindView(R.id.previous_layout)
     LinearLayout previousButton;
@@ -76,8 +66,13 @@ public class StepActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_step_activiity);
+        setContentView(R.layout.activity_step);
         Timber.d("Start onCreate");
+        if(savedInstanceState != null){
+            playerPosition = savedInstanceState.getLong("Position");
+            isPlaying = savedInstanceState.getBoolean("IsPlaying");
+            stepNumber = savedInstanceState.getInt("Step Number");
+        }
         stepNumber = getIntent().getExtras() == null ? 1 : getIntent().getExtras().getInt("Step Number");
         initializeLayout();;
         Timber.d("End onCreate");
@@ -173,13 +168,22 @@ public class StepActivity extends AppCompatActivity implements LoaderManager.Loa
         player = ExoPlayerFactory.newSimpleInstance(this,trackSelector,loadControl);
         if(cursor != null){
             String userAgent = Util.getUserAgent(this, "BakingApp");
-            MediaSource videoSource = new ExtractorMediaSource(Uri.parse(setThumbnailVisibilityAndGetURLString
-                    (cursor.getString(1),cursor.getString(2))), new DefaultDataSourceFactory(
+            MediaSource videoSource = new ExtractorMediaSource(Uri.parse(cursor.getString(1)), new DefaultDataSourceFactory(
                     this, userAgent), new DefaultExtractorsFactory(), null, null);
             player.prepare(videoSource);
             instructionVideo.setPlayer(player);
             player.setPlayWhenReady(isPlaying);
             player.seekTo(playerPosition);
+            Picasso.with(this)
+                    .load(Uri.parse(cursor.getString(2) == null ? "" : cursor.getString(2) ))
+                    .error(R.drawable.baking_icon)
+                    .into(thumbnail);
+            if(!cursor.getString(1).equals("")){
+                thumbnail.setVisibility(View.INVISIBLE);
+            }
+            else {
+                thumbnail.setVisibility(View.VISIBLE);
+            }
             Timber.d("End setPlayer");
         }
 
@@ -194,67 +198,23 @@ public class StepActivity extends AppCompatActivity implements LoaderManager.Loa
         Timber.d("End releasePlayer");
     }
 
-    private void closeFullscreenDialog() {
-        Timber.d("Start closeFullscreenDialog");
-        isPlaying = player.getPlayWhenReady();
-        playerPosition = player.getCurrentPosition();
-        releasePlayer();
-        setContentView(R.layout.activity_step_activiity);
-        initializeLayout();
-        mExoPlayerFullscreen = false;
-        mFullScreenDialog.dismiss();
-        Timber.d("End closeFullscreenDialog");
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean("IsPlaying", player.getPlayWhenReady());
+        outState.putLong("Position", player.getCurrentPosition());
+        outState.putInt("Step Number", cursor.getPosition());
+        super.onSaveInstanceState(outState);
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        Timber.d("Start onPause");
+    protected void onStop() {
+        super.onStop();
+        Timber.d("Start onStop");
         isPlaying = false;
         player.setPlayWhenReady(isPlaying);
         playerPosition = player.getCurrentPosition();
         releasePlayer();
-        Timber.d("Start onPause");
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        Timber.d("Start onConfigurationChanged");
-        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
-            mFullScreenDialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
-                public void onBackPressed() {
-                    if (mExoPlayerFullscreen)
-                        closeFullscreenDialog();
-                    super.onBackPressed();
-                }
-            };
-            ((ViewGroup) instructionVideo.getParent()).removeView(instructionVideo);
-            mFullScreenDialog.addContentView(instructionVideo,
-                    new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT));
-            mFullScreenDialog.show();
-        }
-        else {
-
-            closeFullscreenDialog();
-        }
-        Timber.d("End onConfigurationChanged");
-    }
-
-    private String setThumbnailVisibilityAndGetURLString(String videoUrl, String thumbnailUrl){
-        if(!videoUrl.equals("")){
-            thumbnail.setVisibility(View.INVISIBLE);
-            return videoUrl;
-        }
-        else if(thumbnailUrl != null){
-            thumbnail.setVisibility(View.INVISIBLE);
-            return thumbnailUrl;
-        }
-        else{
-            thumbnail.setVisibility(View.VISIBLE);
-            return "";
-        }
+        Timber.d("Start onStop");
     }
 
     @Override
